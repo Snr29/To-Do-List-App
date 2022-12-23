@@ -1,25 +1,66 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from "react";
+import TodoList from "./components/TodoList";
 
-function App() {
+const App = () => {
+  const [task, setTask] = useState("");
+  const [todos, setTodos] = useState([]);
+  const [completedTodos, setCompletedTodos] = useState([]);
+
+  const changeHandler = (e) => {
+    setTask(e.target.value);
+  };
+  const submitHandler = (e) => {
+    e.preventDefault();
+    if (!task) {
+      alert("Please Enter The Task");
+      return;
+    }
+    const newTodos = [...todos, task];
+    setTodos(newTodos);
+    setTask("");
+  };
+
+  const deleteHandler = (indexValue) => {
+    const newTodos = todos.filter((todo, index) => index !== indexValue);
+    setTodos(newTodos);
+  };
+
+  const completeHandler = (indexValue) => {
+    const completedTask = todos[indexValue];
+    const newCompletedTodos = [...completedTodos, completedTask];
+    setCompletedTodos(newCompletedTodos);
+    const newTodos = todos.filter((todo, index) => index !== indexValue);
+    setTodos(newTodos);
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <center>
+        <div className="card">
+          <div className="card-body">
+            <h5 className="card-title">To-Do List Application</h5>
+            <form onSubmit={submitHandler}>
+              <input
+                type="text"
+                name="task"
+                value={task}
+                onChange={changeHandler}
+                placeholder="Enter the task"
+              />
+              &nbsp;&nbsp;
+              <input size="50" type="submit" value="Add" name="Add" />
+            </form>
+            <TodoList
+              todolist={todos}
+              deleteHandler={deleteHandler}
+              completeHandler={completeHandler}
+              completedTodos={completedTodos}
+            />
+          </div>
+        </div>
+      </center>
     </div>
   );
-}
+};
 
 export default App;
